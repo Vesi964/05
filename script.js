@@ -5,6 +5,7 @@ const products = [
         description: 'Стилен нож със светящо острие и бонус щети.',
         price: 120,
         tag: 'AWP',
+        rarity: 'Legendary',
         image: 'https://img.icons8.com/color/256/knife.png'
     },
     {
@@ -13,6 +14,7 @@ const products = [
         description: 'Премиум броня със защитни ефекти и стил.',
         price: 220,
         tag: 'Armor',
+        rarity: 'Epic',
         image: 'https://img.icons8.com/color/256/chest-armor.png'
     },
     {
@@ -21,6 +23,7 @@ const products = [
         description: 'Ярък скин, който отличава твоята пушка на бойното поле.',
         price: 180,
         tag: 'Rifle',
+        rarity: 'Rare',
         image: 'https://img.icons8.com/color/256/assault-rifle.png'
     },
     {
@@ -29,6 +32,7 @@ const products = [
         description: 'Шлем с магически символи и защита срещу критични удари.',
         price: 150,
         tag: 'Helmet',
+        rarity: 'Epic',
         image: 'https://img.icons8.com/color/256/medieval-helmet.png'
     },
     {
@@ -37,6 +41,7 @@ const products = [
         description: 'Козметичен аксесоар за твоя верен цифров партньор.',
         price: 80,
         tag: 'Pet',
+        rarity: 'Common',
         image: 'https://img.icons8.com/color/256/dog.png'
     }
 ];
@@ -78,6 +83,10 @@ function renderProducts() {
         title.className = 'product-name';
         title.textContent = product.name;
 
+        const rarity = document.createElement('span');
+        rarity.className = `rarity-badge rarity-${product.rarity.toLowerCase()}`;
+        rarity.textContent = product.rarity;
+
         const description = document.createElement('p');
         description.className = 'product-description';
         description.textContent = product.description;
@@ -99,6 +108,7 @@ function renderProducts() {
         footer.appendChild(button);
 
         content.appendChild(title);
+        content.appendChild(rarity);
         content.appendChild(description);
         content.appendChild(footer);
 
