@@ -60,6 +60,7 @@ const coinsElement = document.getElementById('coins');
 const productList = document.getElementById('product-list');
 const inventoryList = document.getElementById('inventory-list');
 const categoryFilters = document.getElementById('category-filters');
+const searchInput = document.getElementById('search-input');
 const cartList = document.getElementById('cart-list');
 const cartTotalElement = document.getElementById('cart-total');
 const checkoutButton = document.getElementById('checkout-button');
@@ -75,8 +76,16 @@ function updateCoins() {
 function renderProducts() {
     productList.innerHTML = '';
 
+    const query = searchInput?.value.trim().toLowerCase() || '';
     const visibleProducts = products.filter((product) => {
-        return activeCategory === 'All' || product.category === activeCategory;
+        const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
+        const matchesSearch =
+            query === '' ||
+            product.name.toLowerCase().includes(query) ||
+            product.description.toLowerCase().includes(query) ||
+            product.tag.toLowerCase().includes(query) ||
+            product.category.toLowerCase().includes(query);
+        return matchesCategory && matchesSearch;
     });
 
     visibleProducts.forEach((product) => {
@@ -310,6 +319,9 @@ function initializeShop() {
     lootboxButton.addEventListener('click', openLootBox);
 
     checkoutButton.addEventListener('click', checkout);
+    if (searchInput) {
+        searchInput.addEventListener('input', renderProducts);
+    }
 }
 
 initializeShop();

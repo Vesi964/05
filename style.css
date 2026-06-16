@@ -137,6 +137,29 @@ body {
     margin-bottom: 20px;
 }
 
+.shop-controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.search-input {
+    min-width: 220px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.06);
+    color: #f2f2f2;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.search-input:focus {
+    border-color: rgba(59,130,246,0.5);
+    background: rgba(255,255,255,0.1);
+}
+
 .section-label {
     margin: 6px 0 0;
     color: #b8b8b8;
