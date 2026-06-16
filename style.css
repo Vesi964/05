@@ -88,16 +88,21 @@ body {
 
 .product-image {
     background: linear-gradient(135deg, #4f46e5, #ec4899);
-    min-height: 140px;
+    min-height: 180px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
     padding: 16px;
     text-align: center;
+}
+
+.product-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.08);
 }
 
 .product-content {

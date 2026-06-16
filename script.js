@@ -4,35 +4,40 @@ const products = [
         name: 'Нощен нож',
         description: 'Стилен нож със светящо острие и бонус щети.',
         price: 120,
-        tag: 'AWP'
+        tag: 'AWP',
+        image: 'https://img.icons8.com/color/256/knife.png'
     },
     {
         id: 2,
         name: 'Огнена броня',
         description: 'Премиум броня със защитни ефекти и стил.',
         price: 220,
-        tag: 'Armor'
+        tag: 'Armor',
+        image: 'https://img.icons8.com/color/256/chest-armor.png'
     },
     {
         id: 3,
         name: 'Легендарен скин за пушка',
         description: 'Ярък скин, който отличава твоята пушка на бойното поле.',
         price: 180,
-        tag: 'Rifle'
+        tag: 'Rifle',
+        image: 'https://img.icons8.com/color/256/assault-rifle.png'
     },
     {
         id: 4,
         name: 'Епичен шлем',
         description: 'Шлем с магически символи и защита срещу критични удари.',
         price: 150,
-        tag: 'Helmet'
+        tag: 'Helmet',
+        image: 'https://img.icons8.com/color/256/medieval-helmet.png'
     },
     {
         id: 5,
         name: 'Грижа за кученце',
         description: 'Козметичен аксесоар за твоя верен цифров партньор.',
         price: 80,
-        tag: 'Pet'
+        tag: 'Pet',
+        image: 'https://img.icons8.com/color/256/dog.png'
     }
 ];
 
@@ -60,7 +65,11 @@ function renderProducts() {
 
         const image = document.createElement('div');
         image.className = 'product-image';
-        image.textContent = product.tag;
+
+        const img = document.createElement('img');
+        img.src = product.image;
+        img.alt = product.name;
+        image.appendChild(img);
 
         const content = document.createElement('div');
         content.className = 'product-content';
