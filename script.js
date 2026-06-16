@@ -55,6 +55,7 @@ let coins = 500;
 const inventory = [];
 const cart = [];
 let activeCategory = 'All';
+const discountOptions = [0, 10, 25, 50];
 
 const coinsElement = document.getElementById('coins');
 const productList = document.getElementById('product-list');
@@ -64,6 +65,20 @@ const searchInput = document.getElementById('search-input');
 const cartList = document.getElementById('cart-list');
 const cartTotalElement = document.getElementById('cart-total');
 const checkoutButton = document.getElementById('checkout-button');
+
+function assignRandomDiscounts() {
+    products.forEach((product) => {
+        if (product.discount === undefined) {
+            product.discount = discountOptions[Math.floor(Math.random() * discountOptions.length)];
+        }
+    });
+}
+
+function getDiscountedPrice(product) {
+    return product.discount > 0
+        ? Math.round(product.price * (1 - product.discount / 100))
+        : product.price;
+}
 
 function formatPrice(value) {
     return `${value} 🪙`;
@@ -118,9 +133,15 @@ function renderProducts() {
         const footer = document.createElement('div');
         footer.className = 'product-footer';
 
+        const discountedPrice = getDiscountedPrice(product);
         const price = document.createElement('span');
         price.className = 'product-price';
-        price.textContent = formatPrice(product.price);
+
+        if (product.discount > 0) {
+            price.innerHTML = `<span class="original-price">${formatPrice(product.price)}</span> ${formatPrice(discountedPrice)}`;
+        } else {
+            price.textContent = formatPrice(product.price);
+        }
 
         const button = document.createElement('button');
         button.className = 'buy-button';
@@ -133,12 +154,19 @@ function renderProducts() {
         addToCartButton.textContent = 'Add to Cart';
         addToCartButton.addEventListener('click', () => addToCart(product));
 
+        const discountBadge = document.createElement('span');
+        if (product.discount > 0) {
+            discountBadge.className = 'discount-badge';
+            discountBadge.textContent = `-${product.discount}%`;
+        }
+
         footer.appendChild(price);
         footer.appendChild(addToCartButton);
         footer.appendChild(button);
 
         content.appendChild(title);
         content.appendChild(rarity);
+        if (product.discount > 0) content.appendChild(discountBadge);
         content.appendChild(description);
         content.appendChild(footer);
 
@@ -168,7 +196,7 @@ function renderInventory() {
         name.textContent = item.name;
 
         const price = document.createElement('span');
-        price.textContent = formatPrice(item.price);
+        price.textContent = formatPrice(getDiscountedPrice(item));
 
         row.appendChild(name);
         row.appendChild(price);
@@ -210,7 +238,7 @@ function renderCart() {
 }
 
 function updateCartTotal() {
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    const total = cart.reduce((sum, item) => sum + getDiscountedPrice(item), 0);
     cartTotalElement.textContent = formatPrice(total);
 }
 
@@ -225,12 +253,13 @@ function removeFromCart(index) {
 }
 
 function buyProduct(product) {
-    if (coins < product.price) {
+    const cost = getDiscountedPrice(product);
+    if (coins < cost) {
         alert('Нямаш достатъчно монети за тази покупка.');
         return;
     }
 
-    coins -= product.price;
+    coins -= cost;
     inventory.push(product);
 
     updateCoins();
@@ -284,7 +313,7 @@ function renderCategoryFilters() {
 }
 
 function checkout() {
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    const total = cart.reduce((sum, item) => sum + getDiscountedPrice(item), 0);
 
     if (total === 0) {
         alert('Кошницата е празна.');
@@ -305,10 +334,11 @@ function checkout() {
     renderCart();
     renderProducts();
 
-    alert(`Успешно купи ${total / 1} монети! Предметите са в инвентара.`);
+    alert(`Успешно купи за ${formatPrice(total)}! Предметите са в инвентара.`);
 }
 
 function initializeShop() {
+    assignRandomDiscounts();
     updateCoins();
     renderCategoryFilters();
     renderProducts();
