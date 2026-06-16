@@ -160,10 +160,26 @@ function buyProduct(product) {
     renderProducts();
 }
 
+function getRandomProduct() {
+    const randomIndex = Math.floor(Math.random() * products.length);
+    return products[randomIndex];
+}
+
+function openLootBox() {
+    const product = getRandomProduct();
+    inventory.push(product);
+    renderInventory();
+
+    alert(`Отворихте Loot Box и получихте: ${product.name} (${product.rarity})`);
+}
+
 function initializeShop() {
     updateCoins();
     renderProducts();
     renderInventory();
+
+    const lootboxButton = document.getElementById('open-lootbox');
+    lootboxButton.addEventListener('click', openLootBox);
 }
 
 initializeShop();
