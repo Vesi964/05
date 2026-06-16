@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин за скинове</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div>
+            <h1>Магазин за предмети и скинове</h1>
+            <p>Купувай скинове, оръжия и аксесоари за твоя герой.</p>
+        </div>
+        <div class="wallet">
+            <span>Монети:</span>
+            <strong id="coins">0</strong>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="shop-section">
+            <h2>Продукти</h2>
+            <div id="product-list" class="product-grid"></div>
+        </section>
+
+        <section class="inventory-section">
+            <h2>Инвентар</h2>
+            <div id="inventory-list" class="inventory-list">
+                <p class="empty-note">Все още нямаш закупени предмети.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
