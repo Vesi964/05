@@ -23,20 +23,40 @@
     </div>
 
     <main class="container">
-    </header>
-
-    <main class="container">
         <section class="shop-section">
-            <h2>Продукти</h2>
+            <div class="shop-top">
+                <div>
+                    <h2>Продукти</h2>
+                    <p class="section-label">Филтрирай по категория и добави желаните елементи в кошницата.</p>
+                </div>
+                <div id="category-filters" class="category-filters"></div>
+            </div>
+
             <div id="product-list" class="product-grid"></div>
         </section>
 
-        <section class="inventory-section">
-            <h2>Инвентар</h2>
-            <div id="inventory-list" class="inventory-list">
-                <p class="empty-note">Все още нямаш закупени предмети.</p>
-            </div>
-        </section>
+        <div class="right-panel">
+            <section class="inventory-section">
+                <h2>Инвентар</h2>
+                <div id="inventory-list" class="inventory-list">
+                    <p class="empty-note">Все още нямаш закупени предмети.</p>
+                </div>
+            </section>
+
+            <section class="cart-section">
+                <h2>Кошница</h2>
+                <div id="cart-list" class="cart-list">
+                    <p class="empty-note">Кошницата е празна. Добави предмети.</p>
+                </div>
+                <div class="cart-footer">
+                    <div class="cart-total">
+                        <span>Общо:</span>
+                        <strong id="cart-total">0</strong>
+                    </div>
+                    <button id="checkout-button" class="checkout-button" disabled>Checkout</button>
+                </div>
+            </section>
+        </div>
     </main>
 
     <script src="script.js"></script>

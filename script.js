@@ -2,10 +2,11 @@ const products = [
     {
         id: 1,
         name: 'Нощен нож',
-        description: 'Стилен нож със светящо острие и бонус щети.',
+        description: 'Стилен нож със светещо острие и бонус щети.',
         price: 120,
         tag: 'AWP',
         rarity: 'Legendary',
+        category: 'Weapons',
         image: 'https://img.icons8.com/color/256/knife.png'
     },
     {
@@ -15,6 +16,7 @@ const products = [
         price: 220,
         tag: 'Armor',
         rarity: 'Epic',
+        category: 'Armor',
         image: 'https://img.icons8.com/color/256/chest-armor.png'
     },
     {
@@ -24,6 +26,7 @@ const products = [
         price: 180,
         tag: 'Rifle',
         rarity: 'Rare',
+        category: 'Weapons',
         image: 'https://img.icons8.com/color/256/assault-rifle.png'
     },
     {
@@ -33,6 +36,7 @@ const products = [
         price: 150,
         tag: 'Helmet',
         rarity: 'Epic',
+        category: 'Armor',
         image: 'https://img.icons8.com/color/256/medieval-helmet.png'
     },
     {
@@ -42,16 +46,23 @@ const products = [
         price: 80,
         tag: 'Pet',
         rarity: 'Common',
+        category: 'Skins',
         image: 'https://img.icons8.com/color/256/dog.png'
     }
 ];
 
 let coins = 500;
 const inventory = [];
+const cart = [];
+let activeCategory = 'All';
 
 const coinsElement = document.getElementById('coins');
 const productList = document.getElementById('product-list');
 const inventoryList = document.getElementById('inventory-list');
+const categoryFilters = document.getElementById('category-filters');
+const cartList = document.getElementById('cart-list');
+const cartTotalElement = document.getElementById('cart-total');
+const checkoutButton = document.getElementById('checkout-button');
 
 function formatPrice(value) {
     return `${value} 🪙`;
@@ -64,7 +75,11 @@ function updateCoins() {
 function renderProducts() {
     productList.innerHTML = '';
 
-    products.forEach((product) => {
+    const visibleProducts = products.filter((product) => {
+        return activeCategory === 'All' || product.category === activeCategory;
+    });
+
+    visibleProducts.forEach((product) => {
         const card = document.createElement('article');
         card.className = 'product-card';
 
@@ -104,7 +119,13 @@ function renderProducts() {
         button.disabled = coins < product.price;
         button.addEventListener('click', () => buyProduct(product));
 
+        const addToCartButton = document.createElement('button');
+        addToCartButton.className = 'cart-add-button';
+        addToCartButton.textContent = 'Add to Cart';
+        addToCartButton.addEventListener('click', () => addToCart(product));
+
         footer.appendChild(price);
+        footer.appendChild(addToCartButton);
         footer.appendChild(button);
 
         content.appendChild(title);
@@ -146,6 +167,54 @@ function renderInventory() {
     });
 }
 
+function renderCart() {
+    cartList.innerHTML = '';
+
+    if (cart.length === 0) {
+        const emptyNote = document.createElement('p');
+        emptyNote.className = 'empty-note';
+        emptyNote.textContent = 'Кошницата е празна. Добави предмети.';
+        cartList.appendChild(emptyNote);
+        checkoutButton.disabled = true;
+        updateCartTotal();
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = 'cart-item';
+
+        const itemLabel = document.createElement('p');
+        itemLabel.textContent = `${item.name} (${item.rarity})`;
+
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.addEventListener('click', () => removeFromCart(index));
+
+        row.appendChild(itemLabel);
+        row.appendChild(removeButton);
+        cartList.appendChild(row);
+    });
+
+    checkoutButton.disabled = false;
+    updateCartTotal();
+}
+
+function updateCartTotal() {
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    cartTotalElement.textContent = formatPrice(total);
+}
+
+function addToCart(product) {
+    cart.push(product);
+    renderCart();
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    renderCart();
+}
+
 function buyProduct(product) {
     if (coins < product.price) {
         alert('Нямаш достатъчно монети за тази покупка.');
@@ -170,16 +239,77 @@ function openLootBox() {
     inventory.push(product);
     renderInventory();
 
-    alert(`Отворихте Loot Box и получихте: ${product.name} (${product.rarity})`);
+    const toast = document.createElement('div');
+    toast.className = 'lootbox-toast';
+    toast.textContent = `Отворихте Loot Box и получихте: ${product.name} (${product.rarity})`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('visible');
+    }, 10);
+
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => document.body.removeChild(toast), 300);
+    }, 2600);
+}
+
+function renderCategoryFilters() {
+    const categories = ['All', ...new Set(products.map((product) => product.category))];
+    categoryFilters.innerHTML = '';
+
+    categories.forEach((category) => {
+        const chip = document.createElement('button');
+        chip.className = 'category-chip';
+        chip.textContent = category;
+        if (category === activeCategory) {
+            chip.classList.add('active');
+        }
+        chip.addEventListener('click', () => {
+            activeCategory = category;
+            renderCategoryFilters();
+            renderProducts();
+        });
+        categoryFilters.appendChild(chip);
+    });
+}
+
+function checkout() {
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+
+    if (total === 0) {
+        alert('Кошницата е празна.');
+        return;
+    }
+
+    if (coins < total) {
+        alert('Нямаш достатъчно монети за checkout.');
+        return;
+    }
+
+    coins -= total;
+    inventory.push(...cart);
+    cart.length = 0;
+
+    updateCoins();
+    renderInventory();
+    renderCart();
+    renderProducts();
+
+    alert(`Успешно купи ${total / 1} монети! Предметите са в инвентара.`);
 }
 
 function initializeShop() {
     updateCoins();
+    renderCategoryFilters();
     renderProducts();
     renderInventory();
+    renderCart();
 
     const lootboxButton = document.getElementById('open-lootbox');
     lootboxButton.addEventListener('click', openLootBox);
+
+    checkoutButton.addEventListener('click', checkout);
 }
 
 initializeShop();
